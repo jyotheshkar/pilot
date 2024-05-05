@@ -59,7 +59,7 @@ if (isset($_POST['delete']) && $_POST['delete'] == 1) {
     $post_id = $_POST['post_id'];
     $user_id = $_SESSION['user_data']['user_id'];
 
-    // Optional: Verify that the user attempting to delete the post is the owner
+    // Verify that the user attempting to delete the post is the owner
     $verify_sql = "SELECT user_id FROM posts WHERE post_id = ?";
     $verify_stmt = $conn->prepare($verify_sql);
     $verify_stmt->bind_param("i", $post_id);
@@ -67,19 +67,43 @@ if (isset($_POST['delete']) && $_POST['delete'] == 1) {
     $verify_result = $verify_stmt->get_result();
     if ($verify_data = $verify_result->fetch_assoc()) {
         if ($verify_data['user_id'] == $user_id) {
-            $delete_sql = "DELETE FROM posts WHERE post_id = ?";
-            $delete_stmt = $conn->prepare($delete_sql);
-            $delete_stmt->bind_param("i", $post_id);
-            $delete_stmt->execute();
-            $delete_stmt->close();
+            // Begin transaction
+            $conn->begin_transaction();
+            try {
+                // Delete comments associated with the post
+                $delete_comments_sql = "DELETE FROM comments WHERE post_id = ?";
+                $delete_comments_stmt = $conn->prepare($delete_comments_sql);
+                $delete_comments_stmt->bind_param("i", $post_id);
+                $delete_comments_stmt->execute();
+                $delete_comments_stmt->close();
 
-            // Redirect or output success message
-            echo "<script>alert('Post deleted successfully!'); window.location.href='posts.php';</script>";
+                // Delete likes associated with the post (if applicable)
+                $delete_likes_sql = "DELETE FROM likes WHERE post_id = ?";
+                $delete_likes_stmt = $conn->prepare($delete_likes_sql);
+                $delete_likes_stmt->bind_param("i", $post_id);
+                $delete_likes_stmt->execute();
+                $delete_likes_stmt->close();
+
+                // Finally, delete the post
+                $delete_post_sql = "DELETE FROM posts WHERE post_id = ?";
+                $delete_post_stmt = $conn->prepare($delete_post_sql);
+                $delete_post_stmt->bind_param("i", $post_id);
+                $delete_post_stmt->execute();
+                $delete_post_stmt->close();
+
+                // Commit transaction
+                $conn->commit();
+
+                echo "<script>alert('Post deleted successfully!'); window.location.href='posts.php';</script>";
+            } catch (mysqli_sql_exception $exception) {
+                // Rollback transaction if something goes wrong
+                $conn->rollback();
+                echo "Error deleting post: " . $exception->getMessage();
+            }
         }
     }
     $verify_stmt->close();
 }
-
 
 
 ?>
