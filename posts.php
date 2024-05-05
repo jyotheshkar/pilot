@@ -1,4 +1,4 @@
-<!-- posts.php -->
+ <!-- posts.php -->
 <?php
 session_start();
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
@@ -96,43 +96,26 @@ if (isset($_POST['delete']) && $_POST['delete'] == 1) {
     
 
 </head>
-<body class="bg-gray-200">
-
-<nav class="sticky top-0 bg-gray-900 p-4 text-white flex justify-between items-center z-50">
-    <div class="flex items-center">
-        <img class="w-auto px-2 bg-white py-2 h-10 sm:h-10 rounded-full mr-2" src="images/ficon.png" alt="">
-        <div class="text-lg font-semibold">Feed</div>
+<body class="bg-gray-100">
+<div class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md mt-10">
+<div class="flex items-center mb-6">
+        <img class="w-10 h-10 rounded-full mr-4" src="<?php echo $profilePic; ?>" alt="Profile Picture">
+        <h2 class="text-lg font-medium text-gray-700"><?php echo $username; ?></h2>
     </div>
-    <a href="body.php" class="hover:bg-gray-700 bg-gray-100 text-gray-900 hover:text-gray-100 px-3 py-2 rounded text-sm transition-colors duration-200">Back</a>
-</nav>
 
-    <div class="max-w-md mx-auto rounded-lg shadow-md mt-10">
-    <!-- Red background section -->
-    <div class="bg-gray-900 p-4 rounded-t-lg">
-    <div class="flex items-center">
-        <img class="w-10 h-10 rounded-full text-gray-100 border-white border-2 mr-4" src="<?php echo $profilePic; ?>" alt="Profile Picture">
-        <h2 class="text-lg font-medium text-gray-100"><?php echo $username; ?></h2>
-    </div>
-</div>
-
-    <!-- White background section for file input and button -->
-    <div class="bg-white p-6 rounded-b-lg">
     <form action="submit_post.php" method="post" enctype="multipart/form-data" class="space-y-4">
-            <div class="flex items-center">
-                <i class="fas fa-pencil-alt text-gray-900 mr-2"></i>
-                <label for="postContent" class="block text-sm font-medium text-gray-700">What's on your mind?</label>
-            </div>
-            <input type="text" id="postContent" name="postContent" required class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 placeholder-gray-500">
-        </form>
-        <form action="submit_post.php" method="post" enctype="multipart/form-data" class="space-y-4">
-            <div class="flex items-center">
-                <i class="fas fa-image text-gray-900 mr-2"></i>
-                <label for="postImage" class="block text-sm font-medium text-gray-700">Upload Image:</label>
-            </div>
-            <input type="file" id="postImage" name="postImage" accept="image/*" class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50">
-            <button type="submit" name="submitPost" class="w-full bg-gray-900 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out">Post</button>
-        </form>
-    </div>
+        <div class="flex items-center">
+            <i class="fas fa-pencil-alt text-gray-900 mr-2"></i>
+            <label for="postContent" class="block text-sm font-medium text-gray-700">What's on your mind?</label>
+        </div>
+        <input type="text" id="postContent" name="postContent" required class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 placeholder-gray-500">
+        <div class="flex items-center">
+            <i class="fas fa-image text-gray-900 mr-2"></i>
+            <label for="postImage" class="block text-sm font-medium text-gray-700">Upload Image:</label>
+        </div>
+        <input type="file" id="postImage" name="postImage" accept="image/*" class="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50">
+        <button type="submit" name="submitPost" class="w-full bg-gray-900 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out">Post</button>
+    </form>
 </div>
 
 <?php
@@ -182,7 +165,7 @@ if ($row['user_id'] == $_SESSION['user_data']['user_id']) {
 }
 
 
-        echo "<div class='flex items-center  space-x-4'>";
+        echo "<div class='flex items-center space-x-4'>";
         echo "<img src='" . htmlspecialchars($row['profile_pic']) . "' alt='Profile Pic' class='w-12 h-12 rounded-full'>";
         echo "<h3 class='text-lg font-bold'>" . htmlspecialchars($row['username']) . "</h3>";
         echo "</div>";
